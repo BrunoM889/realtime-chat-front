@@ -23,6 +23,7 @@ function Msg({ m, username }: { m: Message; username: string }) {
       } `}
     >
       {m.text.split("\n").map((p: string, i) => {
+        console.log(p, date);
         return (
           <p
             key={i}

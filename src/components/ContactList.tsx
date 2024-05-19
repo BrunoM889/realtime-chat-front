@@ -12,9 +12,8 @@ function ContactList({ userData, chats, handleChat, chatActive }: Props) {
     <div className="w-full grow overflow-auto max-h-[75vh] h-full">
       <div className="w-full flex flex-col">
         {userData.contacts?.map((name, i) => {
-          const lastMessage = chats
-            ?.find((c) => c.user1 === name || c.user2 === name)
-            ?.messages.at(-1);
+          const chat = chats.find((c) => c.user1 === name || c.user2 === name);
+          const lastMessage = chat?.messages[chat.messages.length - 1];
 
           return (
             <div

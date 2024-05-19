@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import SignIn from "./sections/SignIn";
 import MainApp from "./sections/MainApp";
 import { UserData, Chat } from "./types";
-
+import { API_URL } from "./config";
 function App() {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [charging, setCharging] = useState(true);
@@ -25,7 +25,7 @@ function App() {
   const handleSubmit = async (user: UserData) => {
     if (user.username.includes(" ")) return handleAlert("Invalid username");
     try {
-      const res = await fetch("http://localhost:3000/auth", {
+      const res = await fetch(`${API_URL}/auth`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -55,12 +55,9 @@ function App() {
     if (window.sessionStorage.getItem("id")) {
       try {
         const res = await fetch(
-          `http://localhost:3000/auth/user/${window.sessionStorage.getItem(
-            "id"
-          )}`
+          `${API_URL}/auth/user/${window.sessionStorage.getItem("id")}`
         );
         const data = await res.json();
-        console.log(data);
 
         if (data) {
           setUserData({
@@ -101,41 +98,45 @@ function App() {
           {alert}
         </div>
       )}
-      <div className="w-[92%] max-w-[1200px] flex flex-col pt-[3vh]">
-        <div className="w-full grow">
-          {userData && chats !== null ? (
-            <MainApp
-              userData={userData}
-              chats={chats}
-              handleAlert={handleAlert}
-              setChats={setChats}
-              setUserData={setUserData}
-            ></MainApp>
-          ) : (
-            <SignIn handleSubmit={handleSubmit} />
-          )}
-        </div>
-        <footer className="flex items-center justify-center text-sm h-10 gap-3">
-          <a
-            className={`border-b px-[2px] leading-4 transition-all border-[#ffffff00] hover:border-[#0c0c02]`}
-            href="http://github.com/BrunoM889/realtime-chat-front"
-            target="_blank"
-          >
-            front
-          </a>
-          <strong className="font-medium">
-            {"<"}source{">"}
-          </strong>
+      {charging ? (
+        <></>
+      ) : (
+        <div className="w-[92%] max-w-[1200px] flex flex-col pt-[3vh]">
+          <div className="w-full grow">
+            {userData && chats !== null ? (
+              <MainApp
+                userData={userData}
+                chats={chats}
+                handleAlert={handleAlert}
+                setChats={setChats}
+                setUserData={setUserData}
+              ></MainApp>
+            ) : (
+              <SignIn handleSubmit={handleSubmit} />
+            )}
+          </div>
+          <footer className="flex items-center justify-center text-sm h-10 gap-3">
+            <a
+              className={`border-b px-[2px] leading-4 transition-all border-[#ffffff00] hover:border-[#0c0c02]`}
+              href="http://github.com/BrunoM889/realtime-chat-front"
+              target="_blank"
+            >
+              front
+            </a>
+            <strong className="font-medium">
+              {"<"}source{">"}
+            </strong>
 
-          <a
-            className={`border-b px-[2px] leading-4 transition-all border-[#ffffff00] hover:border-[#0c0c02]`}
-            href="http://github.com/BrunoM889/realtime-chat-back"
-            target="_blank"
-          >
-            back
-          </a>
-        </footer>
-      </div>
+            <a
+              className={`border-b px-[2px] leading-4 transition-all border-[#ffffff00] hover:border-[#0c0c02]`}
+              href="http://github.com/BrunoM889/realtime-chat-back"
+              target="_blank"
+            >
+              back
+            </a>
+          </footer>
+        </div>
+      )}
     </main>
   );
 }

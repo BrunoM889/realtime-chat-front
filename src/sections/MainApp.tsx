@@ -7,7 +7,7 @@ import Msg from "../components/Msg";
 import { dateFormmated } from "../components/Msg";
 import SearchContact from "../components/SearchContact";
 import ContactList from "../components/ContactList";
-
+import { API_URL } from "../config";
 interface Props {
   userData: UserData;
   chats: Chat[];
@@ -28,7 +28,7 @@ function MainApp({
 
   useEffect(() => {
     setSocket(
-      io("http://localhost:3000", {
+      io(`${API_URL}`, {
         auth: {
           username: userData.username,
         },
@@ -72,7 +72,7 @@ function MainApp({
       chatFinded.messages.push({
         text: message,
         sender: sender,
-        createdAt: `${dateNow}, ${date.getHours()}:${date.getMinutes()}`,
+        createdAt: `${dateNow}, ${date.toTimeString()}`, // TODO: change to timezone
       });
     }
     setChats(chatsCopy);
@@ -143,7 +143,7 @@ function MainApp({
       setChatActive(chatFinded);
     } else {
       try {
-        const res = await fetch("http://localhost:3000/chats", {
+        const res = await fetch(`${API_URL}/chats`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
